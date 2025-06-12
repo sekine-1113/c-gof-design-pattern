@@ -1,0 +1,1 @@
+# c-gof-design-pattern

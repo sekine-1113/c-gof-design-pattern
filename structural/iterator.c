@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define new_Iterable(type, max_length) _new_Iterable(sizeof(type), max_length)
+#define add_Iterable(iter, value) _add_Iterable(iter, &(value))
 #define next(type, iter) *(type*)_next(iter)
 #define N 10
 
@@ -11,12 +12,12 @@ typedef struct _Iterable {
     size_t element_size;
     size_t length;
     size_t maxLength;
-    size_t current_position;
+    size_t cursor;
     int (*hasNext)(struct _Iterable* self);
 } Iterable;
 
 int hasNext(Iterable* self) {
-    return self->current_position < self->length;
+    return self->cursor < self->length;
 }
 
 Iterable* _new_Iterable(size_t element_size, size_t max_length) {
@@ -25,7 +26,7 @@ Iterable* _new_Iterable(size_t element_size, size_t max_length) {
     iter->array = malloc(iter->element_size * max_length);
     iter->length = 0;
     iter->maxLength = max_length;
-    iter->current_position = 0;
+    iter->cursor = 0;
     iter->hasNext = hasNext;
     return iter;
 }
@@ -40,17 +41,27 @@ void set_Iterable(Iterable* iter, void* values, size_t length) {
     iter->length = length;
 }
 
+void _add_Iterable(Iterable* iter, void* value) {
+    if (iter->length + 1 < iter->maxLength) {
+        void* target = iter->array + iter->element_size * iter->length;
+        memcpy(target, value, iter->element_size);
+        iter->length++;
+    }
+}
+
 void* _next(Iterable* iter) {
-    void* ptr = iter->array + (iter->element_size * iter->current_position);
-    iter->current_position++;
+    void* ptr = iter->array + (iter->element_size * iter->cursor);
+    iter->cursor++;
     return ptr;
 }
 
 int main(void){
     Iterable* it = new_Iterable(int, N*2);
     int values[N] = {0};
-    for (int i=0; i<N; i++) values[i] = rand() % 1024;
-    set_Iterable(it, values, N);
+    for (int i=0; i<N; i++) {
+        int tmp = rand() % 1024;
+        add_Iterable(it, tmp);
+    };
 
     while (it->hasNext(it)) {
         printf("%d\n", next(int, it));

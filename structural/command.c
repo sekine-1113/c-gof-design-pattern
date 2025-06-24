@@ -116,8 +116,8 @@ void undo(RemoteControler* self) {
     } else {
         printf("Nothing to undo\n");
     }
-
 }
+
 void redo(RemoteControler* self) {
     if (self->historyIndex + 1 < self->historyLength) {
         printf("REDO: ");
@@ -126,8 +126,8 @@ void redo(RemoteControler* self) {
     } else {
         printf("Nothing to redo\n");
     }
-
 }
+
 RemoteControler* new_RemoteControler(Command* command) {
     RemoteControler* self = (RemoteControler*)malloc(sizeof(RemoteControler));
     self->currentCommand = command;

@@ -9,6 +9,38 @@ typedef struct _Recipe {
     void (*serve)(struct _Recipe* self);
 } Recipe;
 
+void make(Recipe* self);
+
+void init_Recipe(Recipe* recipe, void (*prepare)(struct _Recipe* self), void (*cook)(struct _Recipe* self), void (*serve)(struct _Recipe* self));
+
+typedef struct _RamenRecipe {
+    Recipe base;
+} RamenRecipe;
+
+void prepareRamen(Recipe* self);
+void cookRamen(Recipe* self);
+void serveRamen(Recipe* self);
+
+typedef struct _UdonRecipe {
+    Recipe base;
+} UdonRecipe;
+
+void prepareUdon(Recipe* self);
+void cookUdon(Recipe* self);
+void serveUdon(Recipe* self);
+void makeRecipe(Recipe* recipe);
+
+int main(void) {
+    RamenRecipe ramenRecipe;
+    init_Recipe((Recipe*)&ramenRecipe, prepareRamen, cookRamen, serveRamen);
+    UdonRecipe udonRecipe;
+    init_Recipe((Recipe*)&udonRecipe, prepareUdon, cookUdon, serveUdon);
+
+    makeRecipe((Recipe*)&ramenRecipe);
+    makeRecipe((Recipe*)&udonRecipe);
+    return 0;
+}
+
 void make(Recipe* self) {
     self->prepare(self);
     self->cook(self);
@@ -22,10 +54,6 @@ void init_Recipe(Recipe* recipe, void (*prepare)(struct _Recipe* self), void (*c
     recipe->serve = serve;
 }
 
-typedef struct _RamenRecipe {
-    Recipe base;
-} RamenRecipe;
-
 void prepareRamen(Recipe* self) {
     printf("鍋とラーメンを用意します。\n");
 }
@@ -37,10 +65,6 @@ void cookRamen(Recipe* self) {
 void serveRamen(Recipe* self) {
     printf("器にラーメンを盛り付けて完成！\n");
 }
-
-typedef struct _UdonRecipe {
-    Recipe base;
-} UdonRecipe;
 
 void prepareUdon(Recipe* self) {
     printf("鍋とうどんを用意します。\n");
@@ -56,15 +80,4 @@ void serveUdon(Recipe* self) {
 
 void makeRecipe(Recipe* recipe) {
     recipe->make(recipe);
-}
-
-int main(void) {
-    RamenRecipe ramenRecipe;
-    init_Recipe((Recipe*)&ramenRecipe, prepareRamen, cookRamen, serveRamen);
-    UdonRecipe udonRecipe;
-    init_Recipe((Recipe*)&udonRecipe, prepareUdon, cookUdon, serveUdon);
-
-    makeRecipe((Recipe*)&ramenRecipe);
-    makeRecipe((Recipe*)&udonRecipe);
-    return 0;
 }

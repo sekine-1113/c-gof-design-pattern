@@ -22,6 +22,42 @@ typedef struct _Subscriber {
     unsigned int id;
     void (*update)(struct _Subscriber* self, Event event);
 } Subscriber;
+void update(struct _Subscriber* self, Event event);
+
+
+typedef struct _Publisher {
+    unsigned int length;
+    unsigned int maxLength;
+    Subscriber* subscribers;
+    void (*subscribe)(struct _Publisher* self, Subscriber subscriber);
+    void (*unsubscribe)(struct _Publisher* self, Subscriber subscriber);
+    void (*notify)(struct _Publisher* self, Event event);
+} Publisher;
+void subscribe(struct _Publisher* self, Subscriber subscriber);
+void unsubscribe(struct _Publisher* self, Subscriber subscriber);
+void notify(struct _Publisher* self, Event event);
+Publisher* new_Publisher(unsigned int maxLength);
+void delete_Publisher(Publisher* publisher);
+
+int main(void){
+    srand((unsigned int)time(NULL));
+
+    Publisher* pub = new_Publisher(4);
+    Subscriber sub1 = { rand(), update };
+    Subscriber sub2 = { rand(), update };
+    Subscriber sub3 = { rand(), update };
+
+    pub->subscribe(pub, sub1);
+    pub->subscribe(pub, sub2);
+    pub->subscribe(pub, sub3);
+    pub->notify(pub, events[0]);
+
+    pub->unsubscribe(pub, sub2);
+    pub->notify(pub, events[1]);
+
+    delete_Publisher(pub);
+    return 0;
+}
 
 void update(struct _Subscriber* self, Event event) {
     switch (event.type) {
@@ -35,16 +71,6 @@ void update(struct _Subscriber* self, Event event) {
         break;
     }
 }
-
-
-typedef struct _Publisher {
-    unsigned int length;
-    unsigned int maxLength;
-    Subscriber* subscribers;
-    void (*subscribe)(struct _Publisher* self, Subscriber subscriber);
-    void (*unsubscribe)(struct _Publisher* self, Subscriber subscriber);
-    void (*notify)(struct _Publisher* self, Event event);
-} Publisher;
 
 void subscribe(struct _Publisher* self, Subscriber subscriber) {
     if (self->length >= self->maxLength) {
@@ -90,25 +116,4 @@ Publisher* new_Publisher(unsigned int maxLength) {
 void delete_Publisher(Publisher* publisher) {
     free(publisher->subscribers);
     free(publisher);
-}
-
-
-int main(void){
-    srand((unsigned int)time(NULL));
-
-    Publisher* pub = new_Publisher(4);
-    Subscriber sub1 = { rand(), update };
-    Subscriber sub2 = { rand(), update };
-    Subscriber sub3 = { rand(), update };
-
-    pub->subscribe(pub, sub1);
-    pub->subscribe(pub, sub2);
-    pub->subscribe(pub, sub3);
-    pub->notify(pub, events[0]);
-
-    pub->unsubscribe(pub, sub2);
-    pub->notify(pub, events[1]);
-
-    delete_Publisher(pub);
-    return 0;
 }

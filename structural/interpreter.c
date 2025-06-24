@@ -12,38 +12,66 @@ typedef struct _Expression {
 typedef struct _Number {
     Expression base;
 } Number;
+int interpretNumber(struct _Expression* self);
+Number* new_Number(int number);
+
+typedef struct _Add {
+    Expression base;
+} Add;
+int interpretAdd(struct _Expression* self);
+Add* new_Add(Expression* left, Expression* right);
+
+typedef struct _Subtract {
+    Expression base;
+} Subtract;
+int interpretSubtract(struct _Expression* self);
+Subtract* new_Subtract(Expression* left, Expression* right);
+
+void delete_Expression(Expression* expression);
+void printExpression(Expression* self);
+
+int main(void) {
+    Expression* expression = (Expression*)new_Subtract(
+        (Expression*)new_Add((Expression*)new_Number(10), (Expression*)new_Number(6)),
+        (Expression*)new_Number(8)
+    );
+
+    printExpression(expression);
+
+    int result = expression->interpret(expression);
+    printf(" = %d\n", result);
+    delete_Expression(expression);
+    return 0;
+}
 
 int interpretNumber(struct _Expression* self) {
     return self->_number;
 }
+
 Number* new_Number(int number) {
     Number* self = (Number*)malloc(sizeof(Number));
     self->base = (Expression){ number, NULL, NULL, interpretNumber};
     return self;
 }
 
-typedef struct _Add {
-    Expression base;
-} Add;
 int interpretAdd(struct _Expression* self) {
     if (self->left == NULL || self->right == NULL) return 0;
     self->_number = self->left->interpret(self->left) + self->right->interpret(self->right);
     return self->_number;
 }
+
 Add* new_Add(Expression* left, Expression* right) {
     Add* self = (Add*)malloc(sizeof(Add));
     self->base = (Expression){ 0, left, right, interpretAdd };
     return self;
 }
 
-typedef struct _Subtract {
-    Expression base;
-} Subtract;
 int interpretSubtract(struct _Expression* self) {
     if (self->left == NULL || self->right == NULL) return 0;
     self->_number = self->left->interpret(self->left) - self->right->interpret(self->right);
     return self->_number;
 }
+
 Subtract* new_Subtract(Expression* left, Expression* right) {
     Subtract* self = (Subtract*)malloc(sizeof(Subtract));
     self->base = (Expression){ 0, left, right, interpretSubtract };
@@ -67,18 +95,4 @@ void printExpression(Expression* self) {
     else if (self->interpret == interpretSubtract) printf(" - ");
     else printf("%d", self->_number);
     if (self->right != NULL) printExpression(self->right);
-}
-
-int main(void) {
-    Expression* expression = (Expression*)new_Subtract(
-        (Expression*)new_Add((Expression*)new_Number(10), (Expression*)new_Number(6)),
-        (Expression*)new_Number(8)
-    );
-
-    printExpression(expression);
-
-    int result = expression->interpret(expression);
-    printf(" = %d\n", result);
-    delete_Expression(expression);
-    return 0;
 }

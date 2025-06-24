@@ -24,17 +24,12 @@ typedef struct _Human {
 void fineAction(Human *self);
 void poisonAction(Human *self);
 void deadAction(Human *self);
-void action(Human *self) {
-    self->state->action(self);
-}
+void action(Human *self);
 State fineState = { Fine, fineAction };
 State poisonState = { Poison, poisonAction };
 State deadState = { Dead, deadAction };
 
-Human* changeState(Human *self, State *state) {
-    self->state = state;
-    return self;
-}
+Human* changeState(Human *self, State *state);
 
 int main(void){
     Human human = { "Takeshi", &fineState, action, changeState, };
@@ -50,11 +45,22 @@ void fineAction(Human *self) {
     printf("%s is fine!\n", self->name);
     self->changeState(self, &poisonState);
 }
+
 void poisonAction(Human *self) {
     printf("%s is poison...\n", self->name);
     self->changeState(self, &deadState);
 }
+
 void deadAction(Human *self) {
     printf("...\n");
     self->changeState(self, &fineState);
+}
+
+void action(Human *self) {
+    self->state->action(self);
+}
+
+Human* changeState(Human *self, State *state) {
+    self->state = state;
+    return self;
 }

@@ -12,7 +12,7 @@ typedef struct _Config {
 
 static Config* CONFIG = NULL;
 Config* getInstance();
-void deleteInstance();
+void delete_Instance();
 
 int main(void){
     printf("SINGLETON_OBJECT value: %d\n", getSingletonObject());
@@ -31,7 +31,7 @@ int main(void){
     printf("CONFIG1: address=%p, PI=%lf, N=%d\n", config1, config1->PI, config1->N);
     printf("CONFIG2: address=%p, PI=%lf, N=%d\n", config2, config2->PI, config2->N);
 
-    deleteInstance();
+    delete_Instance();
     return 0;
 }
 
@@ -47,7 +47,7 @@ Config* getInstance() {
     return CONFIG;
 }
 
-void deleteInstance() {
+void delete_Instance() {
     if (CONFIG != NULL) {
         free(CONFIG);
         CONFIG = NULL;

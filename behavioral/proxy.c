@@ -14,6 +14,22 @@ typedef struct _FileProxy {
     int (*findCache)(struct _FileProxy* self, char* filename);
 } FileProxy;
 
+File* readFile(struct _FileProxy* self, char* filename);
+int findCache(struct _FileProxy* self, char* filename);
+FileProxy* new_FileProxy(void);
+void delete_FileProxy(struct _FileProxy* proxy);
+
+int main(void) {
+    FileProxy* proxy = new_FileProxy();
+    proxy->readFile(proxy, "fileA.txt");
+    proxy->readFile(proxy, "fileA.txt");
+    proxy->readFile(proxy, "fileB.txt");
+
+    delete_FileProxy(proxy);
+
+    return 0;
+}
+
 File* readFile(struct _FileProxy* self, char* filename) {
     int foundIndex = self->findCache(self, filename);
     if (foundIndex != -1) {
@@ -52,15 +68,4 @@ void delete_FileProxy(struct _FileProxy* proxy) {
         free(proxy->cache[i]);
     }
     free(proxy);
-}
-
-int main(void) {
-    FileProxy* proxy = new_FileProxy();
-    proxy->readFile(proxy, "fileA.txt");
-    proxy->readFile(proxy, "fileA.txt");
-    proxy->readFile(proxy, "fileB.txt");
-
-    delete_FileProxy(proxy);
-
-    return 0;
 }

@@ -15,6 +15,38 @@ typedef struct _Iterable {
     size_t cursor;
     int (*hasNext)(struct _Iterable* self);
 } Iterable;
+int hasNext(Iterable* self);
+Iterable* _new_Iterable(size_t element_size, size_t max_length);
+void delete_Iterable(Iterable* iter);
+void set_Iterable(Iterable* iter, void* values, size_t length);
+void _add_Iterable(Iterable* iter, void* value);
+void* _next(Iterable* iter);
+
+int main(void){
+    Iterable* it = new_Iterable(int, N*2);
+    int values[N] = {0};
+    for (int i=0; i<N; i++) {
+        int tmp = rand() % 1024;
+        add_Iterable(it, tmp);
+    };
+
+    while (it->hasNext(it)) {
+        printf("%d\n", next(int, it));
+    }
+
+    delete_Iterable(it);
+
+    it = new_Iterable(char*, N);
+    char* strings[2] = {"Hello", "World"};
+    set_Iterable(it, strings, 2);
+
+    while (it->hasNext(it)) {
+        printf("%s\n", next(char*, it));
+    }
+
+    delete_Iterable(it);
+    return 0;
+}
 
 int hasNext(Iterable* self) {
     return self->cursor < self->length;
@@ -53,30 +85,4 @@ void* _next(Iterable* iter) {
     void* ptr = iter->array + (iter->element_size * iter->cursor);
     iter->cursor++;
     return ptr;
-}
-
-int main(void){
-    Iterable* it = new_Iterable(int, N*2);
-    int values[N] = {0};
-    for (int i=0; i<N; i++) {
-        int tmp = rand() % 1024;
-        add_Iterable(it, tmp);
-    };
-
-    while (it->hasNext(it)) {
-        printf("%d\n", next(int, it));
-    }
-
-    delete_Iterable(it);
-
-    it = new_Iterable(char*, N);
-    char* strings[2] = {"Hello", "World"};
-    set_Iterable(it, strings, 2);
-
-    while (it->hasNext(it)) {
-        printf("%s\n", next(char*, it));
-    }
-
-    delete_Iterable(it);
-    return 0;
 }

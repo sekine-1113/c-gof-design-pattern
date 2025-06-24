@@ -7,16 +7,8 @@ typedef struct _Employee {
     void (*setNext)(struct _Employee* self, struct _Employee* next);
     void (*approveRequest)(struct _Employee* self, int amount);
 } Employee;
-void setNext(struct _Employee* self, struct _Employee* next) {
-    self->next = next;
-}
-void delete_Employee(Employee* employee) {
-    if (employee == NULL) return;
-    if (employee->next != NULL) {
-        delete_Employee(employee->next);
-    }
-    free(employee);
-}
+void setNext(struct _Employee* self, struct _Employee* next);
+void delete_Employee(Employee* employee);
 
 typedef struct _Staff {
     Employee base;
@@ -51,6 +43,18 @@ int main(void){
 
     delete_Employee(staffA);
     delete_Employee(staffB);
+}
+
+void setNext(struct _Employee* self, struct _Employee* next) {
+    self->next = next;
+}
+
+void delete_Employee(Employee* employee) {
+    if (employee == NULL) return;
+    if (employee->next != NULL) {
+        delete_Employee(employee->next);
+    }
+    free(employee);
 }
 
 void approveRequestByStaff(Employee* self, int amount) {

@@ -20,11 +20,14 @@ void doOperationB(struct _Operation* self);
 void doOperationC(struct _Operation* self);
 void operate(Operator* self);
 Operator* new_Operator(DoOperationFunc func1, DoOperationFunc func2, DoOperationFunc func3);
+void delete_Operator(Operator* operator);
 
 int main(void) {
     Operator* operator = new_Operator(doOperationA, doOperationB, doOperationC);
 
     operator->operate(operator);
+
+    delete_Operator(operator);
 
     return 0;
 }
@@ -54,4 +57,8 @@ Operator* new_Operator(DoOperationFunc func1, DoOperationFunc func2, DoOperation
     operator->operationB = (Operation){ func2 };
     operator->operationC = (Operation){ func3 };
     return operator;
+}
+
+void delete_Operator(Operator* operator) {
+    free(operator);
 }

@@ -41,6 +41,7 @@ void pressButton(RemoteControler* self);
 void undo(RemoteControler* self);
 void redo(RemoteControler* self);
 RemoteControler* new_RemoteControler(Command* command);
+void delete_RemoteControler(RemoteControler* remote);
 
 int main(void) {
     LightOnCommand lightOnCommand = { { executeLightOn, undoLightOn } };
@@ -63,7 +64,7 @@ int main(void) {
     remote->redo(remote);
     remote->redo(remote);
 
-    free(remote);
+    delete_RemoteControler(remote);
     return 0;
 }
 
@@ -138,4 +139,8 @@ RemoteControler* new_RemoteControler(Command* command) {
     self->undo = undo;
     self->redo = redo;
     return self;
+}
+
+void delete_RemoteControler(RemoteControler* remote) {
+    free(remote);
 }

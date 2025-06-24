@@ -27,7 +27,7 @@ void absolutePath(FileInfo* info);
 void _ls(FileInfo* info, int depth);
 void ls(FileInfo* info);
 
-void deleteFileInfo(FileInfo* info);
+void delete_FileInfo(FileInfo* info);
 
 int main(void) {
     FileInfo* rootDir = new_Directory("root");
@@ -48,7 +48,7 @@ int main(void) {
 
     absolutePath(fileD);
 
-    deleteFileInfo(rootDir);
+    delete_FileInfo(rootDir);
     return 0;
 }
 
@@ -134,9 +134,9 @@ void ls(FileInfo* info) {
     _ls(info, 0);
 }
 
-void deleteFileInfo(FileInfo* info) {
+void delete_FileInfo(FileInfo* info) {
     for (int i=0; i<info->childCount; i++) {
-        deleteFileInfo(info->children[i]);
+        delete_FileInfo(info->children[i]);
     }
     free(info->name);
     free(info);

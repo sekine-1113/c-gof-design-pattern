@@ -15,16 +15,32 @@ typedef struct _Operator {
     Operation operationB;
     Operation operationC;
 } Operator;
+void doOperationA(struct _Operation* self);
+void doOperationB(struct _Operation* self);
+void doOperationC(struct _Operation* self);
+void operate(Operator* self);
+Operator* new_Operator(DoOperationFunc func1, DoOperationFunc func2, DoOperationFunc func3);
+
+int main(void) {
+    Operator* operator = new_Operator(doOperationA, doOperationB, doOperationC);
+
+    operator->operate(operator);
+
+    return 0;
+}
 
 void doOperationA(struct _Operation* self) {
     printf("オペレーションAを実行！\n");
 }
+
 void doOperationB(struct _Operation* self) {
     printf("オペレーションBを実行！\n");
 }
+
 void doOperationC(struct _Operation* self) {
     printf("オペレーションCを実行！\n");
 }
+
 void operate(Operator* self) {
     self->operationA.doOperation(&self->operationA);
     self->operationB.doOperation(&self->operationB);
@@ -38,12 +54,4 @@ Operator* new_Operator(DoOperationFunc func1, DoOperationFunc func2, DoOperation
     operator->operationB = (Operation){ func2 };
     operator->operationC = (Operation){ func3 };
     return operator;
-}
-
-int main(void) {
-    Operator* operator = new_Operator(doOperationA, doOperationB, doOperationC);
-
-    operator->operate(operator);
-
-    return 0;
 }

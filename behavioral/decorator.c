@@ -8,21 +8,8 @@ typedef struct _Decorator {
     char* (*decorate)(struct _Decorator* self, char* str);
 } Decorator;
 char* decorate(Decorator* self, char* str);
-
-Decorator* new_Decorator(char c, Decorator* decorator) {
-    Decorator* deco = (Decorator*)malloc(sizeof(Decorator));
-    deco->component = decorator;
-    deco->decorate_char = c;
-    deco->decorate = decorate;
-    return deco;
-}
-
-void delete_Decorator(Decorator* decorator) {
-    if (decorator->component != NULL) {
-        delete_Decorator(decorator->component);
-    }
-    free(decorator);
-}
+Decorator* new_Decorator(char c, Decorator* decorator);
+void delete_Decorator(Decorator* decorator);
 
 int main(void) {
     char *str = "Hello";
@@ -48,4 +35,19 @@ char* decorate(Decorator* self, char* str) {
     sprintf(new_str, "%c%s%c", self->decorate_char, base_str, self->decorate_char);
     free(base_str);
     return new_str;
+}
+
+Decorator* new_Decorator(char c, Decorator* decorator) {
+    Decorator* deco = (Decorator*)malloc(sizeof(Decorator));
+    deco->component = decorator;
+    deco->decorate_char = c;
+    deco->decorate = decorate;
+    return deco;
+}
+
+void delete_Decorator(Decorator* decorator) {
+    if (decorator->component != NULL) {
+        delete_Decorator(decorator->component);
+    }
+    free(decorator);
 }

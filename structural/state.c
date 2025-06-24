@@ -34,9 +34,9 @@ Human* changeState(Human *self, State *state);
 int main(void){
     Human human = { "Takeshi", &fineState, action, changeState, };
 
-    action(&human);
-    action(&human);
-    action(&human);
+    human.action(&human);
+    human.action(&human);
+    human.action(&human);
 
     return 0;
 }

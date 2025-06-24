@@ -48,6 +48,7 @@ int main(void){
 void setNext(struct _Employee* self, struct _Employee* next) {
     self->next = next;
 }
+
 void delete_Employee(Employee* employee) {
     if (employee == NULL) return;
     if (employee->next != NULL) {

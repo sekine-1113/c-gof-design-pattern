@@ -7,24 +7,15 @@ typedef struct _Product {
     char* name;
     void (*print_name)(struct _Product* self);
 } Product;
-void print_name(struct _Product* self) {
-    printf("%s\n", self->name);
-}
+void print_name(struct _Product* self);
 static Product PS5 = { "PS5", print_name };
 static Product Switch2 = { "Switch2", print_name };
-
 
 typedef struct _Factory {
     Product* (*create_product)(void);
 } Factory;
-Product* create_ps5(void) {
-    Product *product = &PS5;
-    return product;
-}
-Product* create_switch2(void) {
-    Product *product = &Switch2;
-    return product;
-}
+Product* create_ps5(void);
+Product* create_switch2(void);
 Factory PS5Factory = { create_ps5 };
 Factory Switch2Factory = { create_switch2 };
 
@@ -38,4 +29,18 @@ int main(void) {
         product->print_name(product);
     }
     return 0;
+}
+
+void print_name(struct _Product* self) {
+    printf("%s\n", self->name);
+}
+
+Product* create_ps5(void) {
+    Product *product = &PS5;
+    return product;
+}
+
+Product* create_switch2(void) {
+    Product *product = &Switch2;
+    return product;
 }
